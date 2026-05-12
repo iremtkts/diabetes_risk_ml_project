@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.data_access.schemas import validate_dataframe
+
 from src.utils.exceptions import (
     DataLoaderError,
     EmptyDataError,
@@ -48,6 +50,8 @@ class DataLoader:
             dataframe = reader_function(file_path)
 
             self._validate_dataframe(dataframe)
+
+            dataframe = validate_dataframe(dataframe)
 
             logger.info(
                 "Data loaded successfully | shape=%s",
