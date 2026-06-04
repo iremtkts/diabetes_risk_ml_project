@@ -8,10 +8,10 @@ class DiabetesDataSchema(pa.DataFrameModel):
     """
 
     Pregnancies: int
-    Glucose: float
-    BloodPressure: float
-    SkinThickness: float
-    Insulin: float
+    Glucose: int
+    BloodPressure: int
+    SkinThickness: int
+    Insulin: int
     BMI: float
     DiabetesPedigreeFunction: float
     Age: int

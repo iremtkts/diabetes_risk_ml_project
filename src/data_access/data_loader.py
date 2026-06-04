@@ -2,10 +2,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.data_access.schemas import validate_dataframe
+from src.data_access.validators import DataValidator
 
 from src.utils.exceptions import (
     DataLoaderError,
+    DataValidationError,
     EmptyDataError,
     InvalidFilePathError,
     UnsupportedFileExtensionError,
@@ -51,7 +52,7 @@ class DataLoader:
 
             self._validate_dataframe(dataframe)
 
-            dataframe = validate_dataframe(dataframe)
+            dataframe = DataValidator.validate(dataframe)
 
             logger.info(
                 "Data loaded successfully | shape=%s",
@@ -66,7 +67,14 @@ class DataLoader:
             raise DataLoaderError(
                 f"Failed to parse file: {file_path}"
             ) from error
-
+            
+        except (
+            InvalidFilePathError,
+            UnsupportedFileExtensionError,
+            EmptyDataError,
+            DataValidationError,
+            ):
+            raise
         except Exception as error:
             logger.exception("Unexpected error occurred during data loading")
 
