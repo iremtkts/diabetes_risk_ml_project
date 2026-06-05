@@ -1,28 +1,17 @@
-from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 
+from src.preprocessing.column_config import ZERO_AS_MISSING_COLUMNS
+from src.preprocessing.column_transformer import build_column_transformer
 from src.preprocessing.transformers import ZeroValueToNaNTransformer
-
-
-ZERO_AS_MISSING_COLUMNS = [
-    "Glucose",
-    "BloodPressure",
-    "SkinThickness",
-    "Insulin",
-    "BMI",
-]
 
 
 def build_preprocessing_pipeline() -> Pipeline:
     """
-    Build preprocessing pipeline for diabetes dataset.
+    Build full preprocessing pipeline for diabetes dataset.
 
     Steps:
         1. Convert medically impossible zero values to NaN.
-        2. Impute missing values using median strategy.
-
-    Returns:
-        Pipeline: sklearn-compatible preprocessing pipeline.
+        2. Apply column-wise preprocessing.
     """
 
     return Pipeline(
@@ -34,10 +23,8 @@ def build_preprocessing_pipeline() -> Pipeline:
                 ),
             ),
             (
-                "median_imputer",
-                SimpleImputer(
-                    strategy="median",
-                ),
+                "column_transformer",
+                build_column_transformer(),
             ),
         ]
     )
