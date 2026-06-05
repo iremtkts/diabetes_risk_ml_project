@@ -6,9 +6,10 @@ from typing import Any
 
 from sklearn.pipeline import Pipeline
 
-from src.config.path import RAW_DATA_DIR
+from src.config.path import METRICS_DIR, RAW_DATA_DIR
 from src.data_access.data_loader import DataLoader
 from src.evaluation.evaluator import EvaluationResult, ModelEvaluator
+from src.evaluation.metrics_writer import MetricsWriter
 from src.models.model_factory import ModelFactory
 from src.preprocessing.column_config import TARGET_COLUMN
 from src.preprocessing.preprocessing_pipeline import build_preprocessing_pipeline
@@ -39,6 +40,7 @@ class TrainingPipeline:
         target_column: str = TARGET_COLUMN,
         test_size: float = 0.2,
         random_state: int = 42,
+        metrics_output_path: Path | None = None,
     ) -> None:
         self.data_path = data_path or RAW_DATA_DIR / "diabetes.csv"
         self.model_name = model_name
@@ -46,12 +48,16 @@ class TrainingPipeline:
         self.target_column = target_column
         self.test_size = test_size
         self.random_state = random_state
+        self.metrics_output_path = (
+            metrics_output_path or METRICS_DIR / "baseline_metrics.json"
+        )
 
         self.data_loader = DataLoader()
         self.data_splitter = DataSplitter()
         self.model_factory = ModelFactory()
         self.model_trainer = ModelTrainer()
         self.model_evaluator = ModelEvaluator()
+        self.metrics_writer = MetricsWriter()
 
     def run(self) -> TrainingPipelineResult:
         logger.info("Starting training pipeline")
@@ -101,6 +107,12 @@ class TrainingPipeline:
             model=training_result.model,
             X_test=X_test_processed,
             y_test=train_test_split.y_test,
+        )
+
+        logger.info("Writing evaluation metrics")
+        self.metrics_writer.write(
+            metrics=evaluation_result.metrics,
+            output_path=self.metrics_output_path,
         )
 
         logger.info("Training pipeline completed successfully")
