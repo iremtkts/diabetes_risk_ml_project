@@ -73,3 +73,20 @@ def test_training_pipeline_returns_train_and_test_data(training_data_path):
     assert result.X_test_processed is not None
     assert len(result.y_train) > 0
     assert len(result.y_test) > 0
+    
+    
+def test_training_pipeline_returns_evaluation_result(training_data_path):
+    pipeline = TrainingPipeline(
+        data_path=training_data_path,
+        model_name="logistic_regression",
+        model_params={"max_iter": 1000},
+        test_size=0.2,
+        random_state=42,
+    )
+
+    result = pipeline.run()
+
+    assert result.evaluation_result is not None
+    assert result.evaluation_result.metrics is not None
+    assert result.evaluation_result.metrics.accuracy >= 0.0
+    assert result.evaluation_result.metrics.accuracy <= 1.0
