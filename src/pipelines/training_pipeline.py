@@ -8,6 +8,7 @@ from sklearn.pipeline import Pipeline
 
 from src.config.path import RAW_DATA_DIR
 from src.data_access.data_loader import DataLoader
+from src.evaluation.evaluator import EvaluationResult, ModelEvaluator
 from src.models.model_factory import ModelFactory
 from src.preprocessing.column_config import TARGET_COLUMN
 from src.preprocessing.preprocessing_pipeline import build_preprocessing_pipeline
@@ -26,6 +27,7 @@ class TrainingPipelineResult:
     X_test_processed: Any
     y_train: Any
     y_test: Any
+    evaluation_result: EvaluationResult
 
 
 class TrainingPipeline:
@@ -49,6 +51,7 @@ class TrainingPipeline:
         self.data_splitter = DataSplitter()
         self.model_factory = ModelFactory()
         self.model_trainer = ModelTrainer()
+        self.model_evaluator = ModelEvaluator()
 
     def run(self) -> TrainingPipelineResult:
         logger.info("Starting training pipeline")
@@ -93,6 +96,13 @@ class TrainingPipeline:
             y_train=train_test_split.y_train,
         )
 
+        logger.info("Evaluating model")
+        evaluation_result = self.model_evaluator.evaluate(
+            model=training_result.model,
+            X_test=X_test_processed,
+            y_test=train_test_split.y_test,
+        )
+
         logger.info("Training pipeline completed successfully")
 
         return TrainingPipelineResult(
@@ -102,4 +112,5 @@ class TrainingPipeline:
             X_test_processed=X_test_processed,
             y_train=train_test_split.y_train,
             y_test=train_test_split.y_test,
+            evaluation_result=evaluation_result,
         )
