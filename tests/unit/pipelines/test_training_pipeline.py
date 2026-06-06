@@ -22,7 +22,15 @@ def metrics_output_path(tmp_path):
 
 
 @pytest.fixture
-def training_pipeline(training_data_path, metrics_output_path):
+def evaluation_report_output_path(tmp_path):
+    return tmp_path / "reports" / "evaluation_report.json"
+
+@pytest.fixture
+def training_pipeline(
+    training_data_path,
+    metrics_output_path,
+    evaluation_report_output_path,
+):
     return TrainingPipeline(
         data_path=training_data_path,
         model_name="logistic_regression",
@@ -30,6 +38,7 @@ def training_pipeline(training_data_path, metrics_output_path):
         test_size=0.2,
         random_state=42,
         metrics_output_path=metrics_output_path,
+        evaluation_report_output_path=evaluation_report_output_path,
     )
 
 
@@ -87,3 +96,31 @@ def test_training_pipeline_writes_metrics_artifact(
     assert "recall" in saved_metrics
     assert "f1" in saved_metrics
     assert "roc_auc" in saved_metrics
+    
+    
+    
+    
+def test_training_pipeline_writes_evaluation_report_artifact(
+    training_pipeline,
+    evaluation_report_output_path,
+):
+    training_pipeline.run()
+
+    assert evaluation_report_output_path.exists()
+
+    with evaluation_report_output_path.open("r", encoding="utf-8") as file:
+        saved_report = json.load(file)
+
+    assert "metrics" in saved_report
+    assert "confusion_matrix" in saved_report
+
+    assert "accuracy" in saved_report["metrics"]
+    assert "precision" in saved_report["metrics"]
+    assert "recall" in saved_report["metrics"]
+    assert "f1" in saved_report["metrics"]
+    assert "roc_auc" in saved_report["metrics"]
+
+    assert "true_negative" in saved_report["confusion_matrix"]
+    assert "false_positive" in saved_report["confusion_matrix"]
+    assert "false_negative" in saved_report["confusion_matrix"]
+    assert "true_positive" in saved_report["confusion_matrix"]

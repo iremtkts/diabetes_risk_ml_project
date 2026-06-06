@@ -9,6 +9,8 @@ NUMERICAL_FEATURES = [
     "Age",
 ]
 
+MODEL_FEATURES = NUMERICAL_FEATURES
+
 ZERO_AS_MISSING_COLUMNS = [
     "Glucose",
     "BloodPressure",
