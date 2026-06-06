@@ -1,11 +1,9 @@
 import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
-from src.preprocessing.column_config import MODEL_FEATURES
 
-from src.preprocessing.preprocessing_pipeline import (
-    build_preprocessing_pipeline,
-)
+from src.preprocessing.column_config import MODEL_FEATURES
+from src.preprocessing.preprocessing_pipeline import build_preprocessing_pipeline
 
 
 class TestPreprocessingPipeline:
@@ -57,10 +55,15 @@ class TestPreprocessingPipeline:
         transformed = pipeline.fit_transform(dataframe)
 
         assert transformed.shape[0] == dataframe.shape[0]
-        
-def test_preprocessing_pipeline_includes_engineered_features(valid_dataframe):
-    pipeline = build_preprocessing_pipeline()
 
-    transformed = pipeline.fit_transform(valid_dataframe.drop(columns=["Outcome"]))
+    def test_pipeline_output_feature_count_matches_model_features(
+        self,
+        valid_dataframe,
+    ) -> None:
+        pipeline = build_preprocessing_pipeline()
 
-    assert transformed.shape[1] == len(MODEL_FEATURES)
+        transformed = pipeline.fit_transform(
+            valid_dataframe.drop(columns=["Outcome"])
+        )
+
+        assert transformed.shape[1] == len(MODEL_FEATURES)
