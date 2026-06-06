@@ -16,6 +16,19 @@ def main() -> None:
 
     print("Training completed successfully.")
     print(result.evaluation_result.metrics)
+    print("X_train_processed shape:", result.X_train_processed.shape)
+    print("X_test_processed shape:", result.X_test_processed.shape)
+
+    feature_names = (
+        result.preprocessing_pipeline
+        .named_steps["column_transformer"]
+        .get_feature_names_out()
+    )
+
+    coefficients = result.model.coef_[0]
+
+    for feature_name, coefficient in zip(feature_names, coefficients):
+        print(feature_name, coefficient)
 
 
 if __name__ == "__main__":
