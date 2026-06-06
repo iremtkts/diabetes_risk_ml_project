@@ -18,6 +18,8 @@ from src.preprocessing.column_config import TARGET_COLUMN
 from src.preprocessing.preprocessing_pipeline import build_preprocessing_pipeline
 from src.preprocessing.splitter import DataSplitter
 from src.training.trainer import ModelTrainer
+from src.evaluation.selected_threshold_writer import SelectedThresholdWriter
+from src.evaluation.threshold_selector import select_threshold
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -47,6 +49,7 @@ class TrainingPipeline:
         evaluation_report_output_path: Path | None = None,
         thresholds: list[float] | None = None,
         threshold_report_output_path: Path | None = None,
+        selected_threshold_output_path: Path | None = None,
     ) -> None:
         self.data_path = data_path or RAW_DATA_DIR / "diabetes.csv"
         self.model_name = model_name
@@ -70,6 +73,10 @@ class TrainingPipeline:
             threshold_report_output_path
             or REPORTS_DIR / "threshold_analysis_report.json"
         )
+        self.selected_threshold_output_path = (
+          selected_threshold_output_path
+          or REPORTS_DIR / "selected_threshold.json"
+        )
 
         self.data_loader = DataLoader()
         self.data_splitter = DataSplitter()
@@ -79,6 +86,7 @@ class TrainingPipeline:
         self.metrics_writer = MetricsWriter()
         self.evaluation_report_writer = EvaluationReportWriter()
         self.threshold_analysis_report_writer = ThresholdAnalysisReportWriter()
+        self.selected_threshold_writer = SelectedThresholdWriter()
 
     def run(self) -> TrainingPipelineResult:
         logger.info("Starting training pipeline")
@@ -153,6 +161,25 @@ class TrainingPipeline:
         self.threshold_analysis_report_writer.write(
             threshold_analysis_results=threshold_analysis_results,
             output_path=self.threshold_report_output_path,
+        )
+        
+        
+        logger.info("Selecting best threshold")
+        selected_threshold_result = select_threshold(
+          threshold_analysis_results=threshold_analysis_results,
+          strategy="maximize_f1",
+         )
+
+        logger.info(
+          "Selected threshold=%s using strategy=%s",
+          selected_threshold_result.selected_threshold,
+          selected_threshold_result.selection_strategy,
+        )
+
+        logger.info("Writing selected threshold artifact")
+        self.selected_threshold_writer.write(
+          selected_threshold_result=selected_threshold_result,
+        output_path=self.selected_threshold_output_path,
         )
 
         logger.info("Training pipeline completed successfully")
