@@ -25,6 +25,10 @@ coverage.xml
 *.cover
 *.log
 
+
+
+/artifacts/models/model.joblib
+/artifacts/models/preprocessing_pipeline.joblib
 # --- İşletim Sistemi & IDE ---
 # macOS
 .DS_Store
