@@ -6,7 +6,7 @@ from typing import Any
 
 from sklearn.pipeline import Pipeline
 
-from src.config.path import METRICS_DIR, RAW_DATA_DIR, REPORTS_DIR
+from src.config.path import METRICS_DIR, MODELS_DIR, RAW_DATA_DIR, REPORTS_DIR
 from src.data_access.data_loader import DataLoader
 from src.evaluation.evaluator import EvaluationResult, ModelEvaluator
 from src.evaluation.metrics_writer import MetricsWriter
@@ -21,6 +21,7 @@ from src.training.trainer import ModelTrainer
 from src.evaluation.selected_threshold_writer import SelectedThresholdWriter
 from src.evaluation.threshold_selector import select_threshold
 from src.utils.logger import get_logger
+from src.training.model_artifact_writer import ModelArtifactWriter
 
 logger = get_logger(__name__)
 
@@ -50,6 +51,9 @@ class TrainingPipeline:
         thresholds: list[float] | None = None,
         threshold_report_output_path: Path | None = None,
         selected_threshold_output_path: Path | None = None,
+        model_output_path: Path | None = None,
+        preprocessing_pipeline_output_path: Path | None = None,
+        model_metadata_output_path: Path | None = None,
     ) -> None:
         self.data_path = data_path or RAW_DATA_DIR / "diabetes.csv"
         self.model_name = model_name
@@ -77,6 +81,18 @@ class TrainingPipeline:
           selected_threshold_output_path
           or REPORTS_DIR / "selected_threshold.json"
         )
+        
+        self.model_output_path = model_output_path or MODELS_DIR / "model.joblib"
+
+        self.preprocessing_pipeline_output_path = (
+           preprocessing_pipeline_output_path
+             or MODELS_DIR / "preprocessing_pipeline.joblib"
+        )
+
+        self.model_metadata_output_path = (
+         model_metadata_output_path
+           or MODELS_DIR / "model_metadata.json"
+        )
 
         self.data_loader = DataLoader()
         self.data_splitter = DataSplitter()
@@ -87,6 +103,17 @@ class TrainingPipeline:
         self.evaluation_report_writer = EvaluationReportWriter()
         self.threshold_analysis_report_writer = ThresholdAnalysisReportWriter()
         self.selected_threshold_writer = SelectedThresholdWriter()
+        self.model_artifact_writer = ModelArtifactWriter()
+        
+        
+        
+    @staticmethod
+    def _get_processed_feature_names(
+        preprocessing_pipeline: Pipeline,
+    ) -> list[str]:
+        column_transformer = preprocessing_pipeline.named_steps["column_transformer"]
+
+        return column_transformer.get_feature_names_out().tolist()
 
     def run(self) -> TrainingPipelineResult:
         logger.info("Starting training pipeline")
@@ -180,6 +207,33 @@ class TrainingPipeline:
         self.selected_threshold_writer.write(
           selected_threshold_result=selected_threshold_result,
         output_path=self.selected_threshold_output_path,
+        )
+        
+        
+        logger.info("Saving model artifacts")
+        model_path = self.model_artifact_writer.save_model(
+        model=training_result.model,
+        output_path=self.model_output_path,
+        )
+
+        preprocessing_pipeline_path = (
+        self.model_artifact_writer.save_preprocessing_pipeline(
+        preprocessing_pipeline=preprocessing_pipeline,
+        output_path=self.preprocessing_pipeline_output_path,
+           )
+        )
+
+        processed_features = self._get_processed_feature_names(
+        preprocessing_pipeline=preprocessing_pipeline
+        )
+
+        self.model_artifact_writer.save_metadata(
+        model_name=self.model_name,
+        model_path=model_path,
+        preprocessing_pipeline_path=preprocessing_pipeline_path,
+        selected_threshold=selected_threshold_result.selected_threshold,
+        processed_features=processed_features,
+        output_path=self.model_metadata_output_path,
         )
 
         logger.info("Training pipeline completed successfully")
