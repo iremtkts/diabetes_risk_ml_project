@@ -1,0 +1,29 @@
+{
+    "best_model_name": "xgboost",
+    "selection_strategy": "minimize selected_false_negative, then maximize selected_recall, selected_f1, selected_precision and selected_roc_auc",
+    "selection_metric_priority": [
+        "selected_false_negative",
+        "selected_recall",
+        "selected_f1",
+        "selected_precision",
+        "selected_roc_auc"
+    ],
+    "metrics": {
+        "model_name": "xgboost",
+        "selected_threshold": 0.3,
+        "default_accuracy": 0.7597402597402597,
+        "default_precision": 0.6545454545454545,
+        "default_recall": 0.6666666666666666,
+        "default_f1": 0.6605504587155964,
+        "default_roc_auc": 0.83,
+        "default_false_negative": 18,
+        "default_false_positive": 19,
+        "selected_accuracy": 0.7727272727272727,
+        "selected_precision": 0.6338028169014085,
+        "selected_recall": 0.8333333333333334,
+        "selected_f1": 0.72,
+        "selected_roc_auc": 0.83,
+        "selected_false_negative": 9,
+        "selected_false_positive": 26
+    }
+}

@@ -36,6 +36,7 @@ class TrainingPipelineResult:
     y_train: Any
     y_test: Any
     evaluation_result: EvaluationResult
+    selected_threshold_result: Any
 
 
 class TrainingPipeline:
@@ -272,4 +273,5 @@ class TrainingPipeline:
             y_train=train_test_split.y_train,
             y_test=train_test_split.y_test,
             evaluation_result=evaluation_result,
+            selected_threshold_result=selected_threshold_result,
         )

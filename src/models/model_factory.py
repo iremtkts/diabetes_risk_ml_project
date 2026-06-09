@@ -1,10 +1,11 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
-
+from xgboost import XGBClassifier
 
 SUPPORTED_MODELS = {
     "logistic_regression": LogisticRegression,
     "random_forest": RandomForestClassifier,
+    "xgboost": XGBClassifier,
 }
 
 
