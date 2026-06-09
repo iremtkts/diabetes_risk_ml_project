@@ -75,6 +75,7 @@ def training_pipeline(
         model_output_path=model_output_path,
         preprocessing_pipeline_output_path=preprocessing_pipeline_output_path,
         model_metadata_output_path=model_metadata_output_path,
+        enable_mlflow_tracking=False,
     )
 
 

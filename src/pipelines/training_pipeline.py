@@ -22,6 +22,7 @@ from src.evaluation.selected_threshold_writer import SelectedThresholdWriter
 from src.evaluation.threshold_selector import select_threshold
 from src.utils.logger import get_logger
 from src.training.model_artifact_writer import ModelArtifactWriter
+from src.tracking.mlflow_tracker import MLflowTracker
 
 logger = get_logger(__name__)
 
@@ -35,6 +36,7 @@ class TrainingPipelineResult:
     y_train: Any
     y_test: Any
     evaluation_result: EvaluationResult
+    selected_threshold_result: Any
 
 
 class TrainingPipeline:
@@ -54,6 +56,7 @@ class TrainingPipeline:
         model_output_path: Path | None = None,
         preprocessing_pipeline_output_path: Path | None = None,
         model_metadata_output_path: Path | None = None,
+        enable_mlflow_tracking: bool = True,
     ) -> None:
         self.data_path = data_path or RAW_DATA_DIR / "diabetes.csv"
         self.model_name = model_name
@@ -61,6 +64,7 @@ class TrainingPipeline:
         self.target_column = target_column
         self.test_size = test_size
         self.random_state = random_state
+        self.enable_mlflow_tracking = enable_mlflow_tracking
 
         self.metrics_output_path = (
             metrics_output_path or METRICS_DIR / "baseline_metrics.json"
@@ -104,6 +108,7 @@ class TrainingPipeline:
         self.threshold_analysis_report_writer = ThresholdAnalysisReportWriter()
         self.selected_threshold_writer = SelectedThresholdWriter()
         self.model_artifact_writer = ModelArtifactWriter()
+        self.mlflow_tracker = MLflowTracker()
         
         
         
@@ -227,7 +232,7 @@ class TrainingPipeline:
         preprocessing_pipeline=preprocessing_pipeline
         )
 
-        self.model_artifact_writer.save_metadata(
+        model_metadata_path = self.model_artifact_writer.save_metadata(
         model_name=self.model_name,
         model_path=model_path,
         preprocessing_pipeline_path=preprocessing_pipeline_path,
@@ -236,6 +241,28 @@ class TrainingPipeline:
         output_path=self.model_metadata_output_path,
         )
 
+        
+        
+        if self.enable_mlflow_tracking:
+          logger.info("Logging training run to MLflow")
+          self.mlflow_tracker.log_training_run(
+          model_name=self.model_name,
+          model_params=self.model_params,
+          test_size=self.test_size,
+          random_state=self.random_state,
+          evaluation_result=evaluation_result,
+          selected_threshold_result=selected_threshold_result,
+          artifact_paths=[
+            self.metrics_output_path,
+            self.evaluation_report_output_path,
+            self.threshold_report_output_path,
+            self.selected_threshold_output_path,
+            model_path,
+            preprocessing_pipeline_path,
+            model_metadata_path,
+           ],
+        )
+          
         logger.info("Training pipeline completed successfully")
 
         return TrainingPipelineResult(
@@ -246,4 +273,5 @@ class TrainingPipeline:
             y_train=train_test_split.y_train,
             y_test=train_test_split.y_test,
             evaluation_result=evaluation_result,
+            selected_threshold_result=selected_threshold_result,
         )

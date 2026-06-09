@@ -1,5 +1,5 @@
 {
-    "model_name": "logistic_regression",
+    "model_name": "xgboost",
     "model_path": "artifacts/models/model.joblib",
     "preprocessing_pipeline_path": "artifacts/models/preprocessing_pipeline.joblib",
     "selected_threshold": 0.3,
