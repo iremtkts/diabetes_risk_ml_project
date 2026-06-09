@@ -36,3 +36,13 @@ coverage.xml
 
 .vscode/
 
+
+# MLflow local tracking
+mlruns/
+mlflow.db
+mlflow.db-shm
+mlflow.db-wal
+
+# Temporary pytest debug artifacts
+tmp/
+
