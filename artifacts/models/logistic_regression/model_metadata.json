@@ -1,0 +1,26 @@
+{
+    "model_name": "logistic_regression",
+    "model_path": "artifacts/models/logistic_regression/model.joblib",
+    "preprocessing_pipeline_path": "artifacts/models/logistic_regression/preprocessing_pipeline.joblib",
+    "selected_threshold": 0.3,
+    "input_features": [
+        "Pregnancies",
+        "Glucose",
+        "BloodPressure",
+        "SkinThickness",
+        "Insulin",
+        "BMI",
+        "DiabetesPedigreeFunction",
+        "Age"
+    ],
+    "processed_features": [
+        "numerical__Pregnancies",
+        "numerical__Glucose",
+        "numerical__BloodPressure",
+        "numerical__SkinThickness",
+        "numerical__Insulin",
+        "numerical__BMI",
+        "numerical__DiabetesPedigreeFunction",
+        "numerical__Age"
+    ]
+}
