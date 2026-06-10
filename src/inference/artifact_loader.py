@@ -6,7 +6,7 @@ from typing import Any
 
 import joblib
 
-from src.config.path import MODELS_DIR, ROOT_DIR
+from src.config.path import MODELS_DIR, ROOT_DIR, PRODUCTION_MODEL_DIR
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -17,7 +17,9 @@ class InferenceArtifactLoader:
         self,
         metadata_path: Path | None = None,
     ) -> None:
-        self.metadata_path = metadata_path or MODELS_DIR / "model_metadata.json"
+        self.metadata_path = (
+          metadata_path or PRODUCTION_MODEL_DIR / "model_metadata.json"
+        )
 
     def load_metadata(self) -> dict[str, Any]:
         logger.info("Loading model metadata from: %s", self.metadata_path)

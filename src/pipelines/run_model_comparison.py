@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from typing import Any
-
+from src.config.path import MODELS_DIR, REPORTS_DIR
+from src.training.model_promoter import ModelPromoter
 from src.evaluation.model_comparison_report_writer import (
     ModelComparisonReportWriter,
 )
@@ -81,15 +82,26 @@ def main() -> None:
     for experiment in MODEL_EXPERIMENTS:
         model_name = experiment["model_name"]
         model_params = experiment["model_params"]
+        model_artifact_dir = MODELS_DIR / model_name
+        model_report_dir = REPORTS_DIR / model_name
 
         logger.info("Starting model comparison run for: %s", model_name)
 
         pipeline = TrainingPipeline(
-            model_name=model_name,
-            model_params=model_params,
-            test_size=0.2,
-            random_state=42,
-            enable_mlflow_tracking=True,
+        model_name=model_name,
+        model_params=model_params,
+        test_size=0.2,
+        random_state=42,
+        metrics_output_path=model_report_dir / "baseline_metrics.json",
+        evaluation_report_output_path=model_report_dir / "evaluation_report.json",
+        threshold_report_output_path=model_report_dir / "threshold_analysis_report.json",
+        selected_threshold_output_path=model_report_dir / "selected_threshold.json",
+        model_output_path=model_artifact_dir / "model.joblib",
+        preprocessing_pipeline_output_path=(
+          model_artifact_dir / "preprocessing_pipeline.joblib"
+        ),
+        model_metadata_output_path=model_artifact_dir / "model_metadata.json",
+        enable_mlflow_tracking=True,
         )
 
         result = pipeline.run()
@@ -120,6 +132,20 @@ def main() -> None:
     best_model_report_writer.write(
     best_model_selection_result=best_model_selection_result
     )
+    
+    best_model_name = best_model_selection_result.best_model_name
+    best_model_artifact_dir = MODELS_DIR / best_model_name
+
+    model_promoter = ModelPromoter()
+    production_model_dir = model_promoter.promote(
+      source_model_dir=best_model_artifact_dir
+    )
+
+    logger.info(
+    "Best model promoted to production | model=%s | production_dir=%s",
+    best_model_name,
+    production_model_dir,
+)
 
     logger.info(
     "Best model selected | model=%s | selected_f1=%.4f | selected_recall=%.4f | selected_fn=%s",
