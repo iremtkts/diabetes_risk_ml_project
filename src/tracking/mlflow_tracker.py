@@ -5,8 +5,8 @@ from typing import Any
 
 import mlflow
 
-from src.evaluation.threshold_selector import SelectedThresholdResult
 from src.evaluation.evaluator import EvaluationResult
+from src.evaluation.threshold_selector import SelectedThresholdResult
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)

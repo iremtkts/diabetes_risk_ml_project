@@ -3,9 +3,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+from src.evaluation.metrics import ClassificationMetrics
 from src.evaluation.report import ConfusionMatrixResult
 from src.evaluation.threshold_analysis import ThresholdAnalysisResult
-
 
 ThresholdSelectionStrategy = Literal["maximize_f1"]
 
@@ -14,7 +14,7 @@ ThresholdSelectionStrategy = Literal["maximize_f1"]
 class SelectedThresholdResult:
     selected_threshold: float
     selection_strategy: ThresholdSelectionStrategy
-    metrics: object
+    metrics: ClassificationMetrics
     confusion_matrix_result: ConfusionMatrixResult
 
 

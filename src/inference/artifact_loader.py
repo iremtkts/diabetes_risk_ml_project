@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import joblib
 
-from src.config.path import MODELS_DIR, ROOT_DIR, PRODUCTION_MODEL_DIR
+from src.config.path import PRODUCTION_MODEL_DIR, ROOT_DIR
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -25,7 +25,7 @@ class InferenceArtifactLoader:
         logger.info("Loading model metadata from: %s", self.metadata_path)
 
         with self.metadata_path.open("r", encoding="utf-8") as file:
-            metadata = json.load(file)
+            metadata = cast(dict[str, Any], json.load(file))
 
         logger.info("Model metadata loaded successfully")
 

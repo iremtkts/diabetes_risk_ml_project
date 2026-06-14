@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 import pandas as pd
-
 from sklearn.model_selection import train_test_split
 
 
@@ -52,7 +51,8 @@ class DataSplitter:
                 dataset.y,
                 test_size=test_size,
                 random_state=random_state,
-                stratify=dataset.y,  # Use stratify=dataset.y to maintain identical class distributions across train and test splits, preventing data imbalance issues.
+                # Preserve the target distribution across train and test sets.
+                stratify=dataset.y,
             )
         )
 

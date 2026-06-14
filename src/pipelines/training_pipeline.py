@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from sklearn.pipeline import Pipeline
 
@@ -11,18 +11,18 @@ from src.data_access.data_loader import DataLoader
 from src.evaluation.evaluator import EvaluationResult, ModelEvaluator
 from src.evaluation.metrics_writer import MetricsWriter
 from src.evaluation.report_writer import EvaluationReportWriter
+from src.evaluation.selected_threshold_writer import SelectedThresholdWriter
 from src.evaluation.threshold_analysis import analyze_thresholds
 from src.evaluation.threshold_report_writer import ThresholdAnalysisReportWriter
+from src.evaluation.threshold_selector import select_threshold
 from src.models.model_factory import ModelFactory
 from src.preprocessing.column_config import TARGET_COLUMN
 from src.preprocessing.preprocessing_pipeline import build_preprocessing_pipeline
 from src.preprocessing.splitter import DataSplitter
-from src.training.trainer import ModelTrainer
-from src.evaluation.selected_threshold_writer import SelectedThresholdWriter
-from src.evaluation.threshold_selector import select_threshold
-from src.utils.logger import get_logger
-from src.training.model_artifact_writer import ModelArtifactWriter
 from src.tracking.mlflow_tracker import MLflowTracker
+from src.training.model_artifact_writer import ModelArtifactWriter
+from src.training.trainer import ModelTrainer
+from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -118,7 +118,10 @@ class TrainingPipeline:
     ) -> list[str]:
         column_transformer = preprocessing_pipeline.named_steps["column_transformer"]
 
-        return column_transformer.get_feature_names_out().tolist()
+        return cast(
+            list[str],
+            column_transformer.get_feature_names_out().tolist(),
+        )
 
     def run(self) -> TrainingPipelineResult:
         logger.info("Starting training pipeline")

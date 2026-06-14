@@ -1,8 +1,8 @@
 import pandas as pd
 
 from src.preprocessing.splitter import (
-    DataSplitter,
     DatasetSplit,
+    DataSplitter,
     TrainTestSplit,
 )
 

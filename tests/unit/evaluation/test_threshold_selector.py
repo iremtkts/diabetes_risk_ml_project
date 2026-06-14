@@ -1,9 +1,9 @@
+import pytest
+
 from src.evaluation.metrics import ClassificationMetrics
 from src.evaluation.report import ConfusionMatrixResult
 from src.evaluation.threshold_analysis import ThresholdAnalysisResult
 from src.evaluation.threshold_selector import select_threshold
-
-import pytest
 
 
 def test_select_threshold_maximize_f1_selects_highest_f1() -> None:

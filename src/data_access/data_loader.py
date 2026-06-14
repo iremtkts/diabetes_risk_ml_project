@@ -1,9 +1,10 @@
+from collections.abc import Callable
 from pathlib import Path
+from typing import cast
 
 import pandas as pd
 
 from src.data_access.validators import DataValidator
-
 from src.utils.exceptions import (
     DataLoaderError,
     DataValidationError,
@@ -12,7 +13,6 @@ from src.utils.exceptions import (
     UnsupportedFileExtensionError,
 )
 from src.utils.logger import get_logger
-
 
 logger = get_logger(__name__)
 
@@ -101,7 +101,10 @@ class DataLoader:
                 f"File does not exist: {file_path}"
             )
 
-    def _get_reader(self, extension: str):
+    def _get_reader(
+        self,
+        extension: str,
+    ) -> Callable[[Path], pd.DataFrame]:
         """
         Get dataframe reader function.
         """
@@ -113,7 +116,10 @@ class DataLoader:
                 f"Unsupported file extension: {extension}"
             )
 
-        return SUPPORTED_EXTENSIONS[extension]
+        return cast(
+            Callable[[Path], pd.DataFrame],
+            SUPPORTED_EXTENSIONS[extension],
+        )
 
     def _validate_dataframe(self, dataframe: pd.DataFrame) -> None:
         """

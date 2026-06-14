@@ -1,15 +1,16 @@
+from typing import Any, Self
+
+import numpy as np
+import pandas as pd
 from sklearn.base import (
     BaseEstimator,
     TransformerMixin,
 )
 
-import numpy as np
-import pandas as pd
-
 
 class ZeroValueToNaNTransformer(
-    BaseEstimator,
-    TransformerMixin,
+    BaseEstimator,  # type: ignore[misc]
+    TransformerMixin,  # type: ignore[misc]
 ):
     """
     Replace medically impossible zero values with NaN.
@@ -25,8 +26,8 @@ class ZeroValueToNaNTransformer(
     def fit(
         self,
         X: pd.DataFrame,
-        y=None,
-    ):
+        y: Any = None,
+    ) -> Self:
 
         return self
 
