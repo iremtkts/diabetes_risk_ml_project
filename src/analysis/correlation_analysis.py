@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-from src.config.path import RAW_DATA_DIR, ARTIFACTS_DIR
+from src.config.path import ARTIFACTS_DIR, RAW_DATA_DIR
 from src.data_access.data_loader import DataLoader
 from src.utils.logger import get_logger
 

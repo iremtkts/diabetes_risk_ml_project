@@ -1,7 +1,9 @@
 import json
 import textwrap
 from pathlib import Path
+
 import pytest
+
 from src.training.model_promoter import ModelPromoter
 
 
@@ -26,7 +28,8 @@ def test_model_promoter_copies_required_artifacts_and_updates_metadata(
         {
             "model_name": "xgboost",
             "model_path": "artifacts/models/xgboost/model.joblib",
-            "preprocessing_pipeline_path": "artifacts/models/xgboost/preprocessing_pipeline.joblib",
+            "preprocessing_pipeline_path":
+                "artifacts/models/xgboost/preprocessing_pipeline.joblib",
             "selected_threshold": 0.3,
             "input_features": [
                 "Pregnancies",

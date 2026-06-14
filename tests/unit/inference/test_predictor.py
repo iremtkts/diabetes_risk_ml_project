@@ -29,7 +29,7 @@ class RecordingPreprocessingPipeline:
     def transform(self, dataframe: pd.DataFrame) -> np.ndarray:
         self.received_columns = list(dataframe.columns)
 
-        return dataframe.to_numpy()
+        return np.asarray(dataframe.to_numpy())
 
 
 def test_predictor_returns_prediction_using_selected_threshold() -> None:

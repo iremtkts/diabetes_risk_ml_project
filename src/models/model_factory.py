@@ -1,3 +1,5 @@
+from typing import Any
+
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from xgboost import XGBClassifier
@@ -17,8 +19,8 @@ class ModelFactory:
     @staticmethod
     def create_model(
         model_name: str,
-        **model_params,
-    ):
+        **model_params: Any,
+    ) -> Any:
         if model_name not in SUPPORTED_MODELS:
             supported_models = list(SUPPORTED_MODELS.keys())
 

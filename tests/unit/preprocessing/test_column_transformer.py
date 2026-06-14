@@ -5,7 +5,6 @@ from src.preprocessing.column_transformer import (
 )
 
 
-
 class TestColumnTransformer:
 
     def test_returns_column_transformer(

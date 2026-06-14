@@ -1,7 +1,7 @@
 from pathlib import Path
 
-import pytest
 import pandas as pd
+import pytest
 
 from src.config.path import FIXTURES_DIR
 

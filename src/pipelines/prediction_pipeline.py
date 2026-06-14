@@ -19,17 +19,19 @@ class PredictionPipeline:
             metadata_path=metadata_path
         )
 
-        metadata = self.artifact_loader.load_metadata()
-        model = self.artifact_loader.load_model(metadata)
+        self.metadata = self.artifact_loader.load_metadata()
+        self.model_name = str(self.metadata.get("model_name", "unknown"))
+
+        model = self.artifact_loader.load_model(self.metadata)
         preprocessing_pipeline = (
-            self.artifact_loader.load_preprocessing_pipeline(metadata)
+            self.artifact_loader.load_preprocessing_pipeline(self.metadata)
         )
 
         self.predictor = DiabetesRiskPredictor(
             model=model,
             preprocessing_pipeline=preprocessing_pipeline,
-            threshold=metadata["selected_threshold"],
-            input_features=metadata["input_features"],
+            threshold=self.metadata["selected_threshold"],
+            input_features=self.metadata["input_features"],
         )
 
     def predict_one(

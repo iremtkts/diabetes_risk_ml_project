@@ -24,10 +24,13 @@ def main() -> None:
         .named_steps["column_transformer"]
         .get_feature_names_out()
     )
-
     coefficients = result.model.coef_[0]
 
-    for feature_name, coefficient in zip(feature_names, coefficients):
+    for feature_name, coefficient in zip(
+        feature_names,
+        coefficients,
+        strict=True,
+    ):
         print(feature_name, coefficient)
 
 

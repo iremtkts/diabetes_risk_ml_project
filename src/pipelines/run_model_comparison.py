@@ -1,19 +1,26 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TypedDict
+
 from src.config.path import MODELS_DIR, REPORTS_DIR
-from src.training.model_promoter import ModelPromoter
+from src.evaluation.best_model_report_writer import BestModelReportWriter
+from src.evaluation.best_model_selector import select_best_model
 from src.evaluation.model_comparison_report_writer import (
     ModelComparisonReportWriter,
 )
 from src.pipelines.training_pipeline import TrainingPipeline
+from src.training.model_promoter import ModelPromoter
 from src.utils.logger import get_logger
-from src.evaluation.best_model_report_writer import BestModelReportWriter
-from src.evaluation.best_model_selector import select_best_model
+
 logger = get_logger(__name__)
 
 
-MODEL_EXPERIMENTS = [
+class ModelExperiment(TypedDict):
+    model_name: str
+    model_params: dict[str, Any]
+
+
+MODEL_EXPERIMENTS: list[ModelExperiment] = [
     {
         "model_name": "logistic_regression",
         "model_params": {
@@ -94,7 +101,9 @@ def main() -> None:
         random_state=42,
         metrics_output_path=model_report_dir / "baseline_metrics.json",
         evaluation_report_output_path=model_report_dir / "evaluation_report.json",
-        threshold_report_output_path=model_report_dir / "threshold_analysis_report.json",
+        threshold_report_output_path=(
+          model_report_dir / "threshold_analysis_report.json"
+        ),
         selected_threshold_output_path=model_report_dir / "selected_threshold.json",
         model_output_path=model_artifact_dir / "model.joblib",
         preprocessing_pipeline_output_path=(
@@ -113,12 +122,16 @@ def main() -> None:
         comparison_results.append(comparison_row)
 
         logger.info(
-            "Completed model comparison run | model=%s | selected_f1=%.4f | selected_recall=%.4f | selected_fn=%s",
-            model_name,
-            comparison_row["selected_f1"],
-            comparison_row["selected_recall"],
-            comparison_row["selected_false_negative"],
-        )
+    (
+        "Completed model comparison run | model=%s | "
+        "selected_f1=%.4f | selected_recall=%.4f | "
+        "selected_fn=%s"
+    ),
+    model_name,
+    comparison_row["selected_f1"],
+    comparison_row["selected_recall"],
+    comparison_row["selected_false_negative"],
+)
 
     comparison_report_writer = ModelComparisonReportWriter()
     comparison_report_writer.write_json(comparison_results=comparison_results)
@@ -148,12 +161,15 @@ def main() -> None:
 )
 
     logger.info(
-    "Best model selected | model=%s | selected_f1=%.4f | selected_recall=%.4f | selected_fn=%s",
+    (
+        "Best model selected | model=%s | selected_f1=%.4f | "
+        "selected_recall=%.4f | selected_fn=%s"
+    ),
     best_model_selection_result.best_model_name,
     best_model_selection_result.metrics["selected_f1"],
     best_model_selection_result.metrics["selected_recall"],
     best_model_selection_result.metrics["selected_false_negative"],
-    )
+)
 
     logger.info("Model comparison completed successfully")
 

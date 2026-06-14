@@ -65,7 +65,9 @@ class ModelArtifactWriter:
         payload = {
             "model_name": model_name,
             "model_path": self._to_relative_path(model_path),
-            "preprocessing_pipeline_path": self._to_relative_path(preprocessing_pipeline_path),
+            "preprocessing_pipeline_path": self._to_relative_path(
+                preprocessing_pipeline_path
+            ),
             "selected_threshold": selected_threshold,
             "input_features": MODEL_FEATURES,
             "processed_features": processed_features,

@@ -1,11 +1,12 @@
 from dataclasses import dataclass
+from typing import Any
 
 import pandas as pd
 
 
 @dataclass
 class TrainingResult:
-    model: object
+    model: Any
 
 
 class ModelTrainer:
@@ -15,7 +16,7 @@ class ModelTrainer:
 
     def train(
         self,
-        model,
+        model: Any,
         X_train: pd.DataFrame,
         y_train: pd.Series,
     ) -> TrainingResult:

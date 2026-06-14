@@ -1,3 +1,4 @@
+import pandas as pd
 from pandera.errors import SchemaError
 
 from src.data_access.schemas import validate_dataframe
@@ -13,7 +14,7 @@ class DataValidator:
     """
 
     @staticmethod
-    def validate(dataframe):
+    def validate(dataframe: pd.DataFrame) -> pd.DataFrame:
         try:
             return validate_dataframe(dataframe)
 

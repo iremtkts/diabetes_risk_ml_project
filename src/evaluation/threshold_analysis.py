@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 import numpy as np
+from numpy.typing import NDArray
 
 from src.evaluation.metrics import (
     ClassificationMetrics,
@@ -22,15 +24,15 @@ class ThresholdAnalysisResult:
 
 
 def predictions_from_threshold(
-    prediction_probabilities,
+    prediction_probabilities: Any,
     threshold: float,
-):
+) -> NDArray[np.int_]:
     return (np.asarray(prediction_probabilities) >= threshold).astype(int)
 
 
 def analyze_threshold(
-    y_true,
-    prediction_probabilities,
+    y_true: Any,
+    prediction_probabilities: Any,
     threshold: float,
 ) -> ThresholdAnalysisResult:
     y_pred = predictions_from_threshold(
@@ -57,8 +59,8 @@ def analyze_threshold(
 
 
 def analyze_thresholds(
-    y_true,
-    prediction_probabilities,
+    y_true: Any,
+    prediction_probabilities: Any,
     thresholds: list[float],
 ) -> list[ThresholdAnalysisResult]:
     return [
