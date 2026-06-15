@@ -1,0 +1,38 @@
+{
+    "model_name": "xgboost",
+    "n_samples": 100,
+    "features": [
+        {
+            "feature_name": "numerical__Glucose",
+            "mean_abs_shap_value": 1.126824864074588
+        },
+        {
+            "feature_name": "numerical__BMI",
+            "mean_abs_shap_value": 0.5071661269571632
+        },
+        {
+            "feature_name": "numerical__DiabetesPedigreeFunction",
+            "mean_abs_shap_value": 0.3672737493552268
+        },
+        {
+            "feature_name": "numerical__Age",
+            "mean_abs_shap_value": 0.35986248005181554
+        },
+        {
+            "feature_name": "numerical__Insulin",
+            "mean_abs_shap_value": 0.26867656141519547
+        },
+        {
+            "feature_name": "numerical__Pregnancies",
+            "mean_abs_shap_value": 0.17746472495608032
+        },
+        {
+            "feature_name": "numerical__BloodPressure",
+            "mean_abs_shap_value": 0.1138516902597621
+        },
+        {
+            "feature_name": "numerical__SkinThickness",
+            "mean_abs_shap_value": 0.08588673887425102
+        }
+    ]
+}
