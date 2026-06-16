@@ -24,7 +24,7 @@ nosetests.xml
 coverage.xml
 *.cover
 *.log
-
+logs/
 
 
 /artifacts/models/model.joblib

@@ -4,11 +4,15 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from src.api.dependencies import get_prediction_pipeline
+from src.api.dependencies import (
+    get_prediction_logger,
+    get_prediction_pipeline,
+)
 from src.api.schemas import (
     DiabetesPredictionRequest,
     DiabetesPredictionResponse,
 )
+from src.monitoring.prediction_logger import PredictionLogger
 from src.pipelines.prediction_pipeline import PredictionPipeline
 from src.utils.logger import get_logger
 
@@ -26,11 +30,27 @@ def predict(
         PredictionPipeline,
         Depends(get_prediction_pipeline),
     ],
+    prediction_logger: Annotated[
+        PredictionLogger,
+        Depends(get_prediction_logger),
+    ],
 ) -> DiabetesPredictionResponse:
     try:
+        input_features = request.to_feature_dict()
         result = prediction_pipeline.predict_one(
-            input_data=request.to_feature_dict()
+            input_data=input_features
         )
+
+        try:
+            prediction_logger.log_prediction(
+                model_name=prediction_pipeline.model_name,
+                risk_probability=result.risk_probability,
+                prediction=result.prediction,
+                threshold=result.threshold,
+                input_features=input_features,
+            )
+        except Exception:
+            logger.exception("Failed to write prediction log")
 
         return DiabetesPredictionResponse(
             risk_probability=result.risk_probability,
