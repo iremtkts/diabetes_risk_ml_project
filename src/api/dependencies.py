@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+from src.monitoring.prediction_logger import PredictionLogger
 from src.pipelines.prediction_pipeline import PredictionPipeline
 from src.utils.logger import get_logger
 
@@ -12,3 +13,7 @@ logger = get_logger(__name__)
 def get_prediction_pipeline() -> PredictionPipeline:
     logger.info("Initializing prediction pipeline")
     return PredictionPipeline()
+
+
+def get_prediction_logger() -> PredictionLogger:
+    return PredictionLogger()
