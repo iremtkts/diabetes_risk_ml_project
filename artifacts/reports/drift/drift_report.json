@@ -1,0 +1,96 @@
+{
+    "reference_data_path": "data/raw/diabetes.csv",
+    "current_data_path": "logs/predictions/prediction_logs.jsonl",
+    "total_current_records": 4,
+    "schema_drift": {
+        "missing_features": [],
+        "unexpected_features": [],
+        "schema_drift_detected": false
+    },
+    "data_drift": {
+        "threshold": 0.2,
+        "data_drift_detected": true,
+        "features": [
+            {
+                "feature_name": "Pregnancies",
+                "reference_mean": 3.8450520833333335,
+                "current_mean": 2.5,
+                "absolute_difference": 1.3450520833333335,
+                "relative_difference": 0.349813748730105,
+                "drift_detected": true,
+                "calculation_available": true,
+                "reason": null
+            },
+            {
+                "feature_name": "Glucose",
+                "reference_mean": 120.89453125,
+                "current_mean": 148.75,
+                "absolute_difference": 27.85546875,
+                "relative_difference": 0.23041132185207922,
+                "drift_detected": true,
+                "calculation_available": true,
+                "reason": null
+            },
+            {
+                "feature_name": "BloodPressure",
+                "reference_mean": 69.10546875,
+                "current_mean": 76.25,
+                "absolute_difference": 7.14453125,
+                "relative_difference": 0.10338590243626702,
+                "drift_detected": false,
+                "calculation_available": true,
+                "reason": null
+            },
+            {
+                "feature_name": "SkinThickness",
+                "reference_mean": 20.536458333333332,
+                "current_mean": 27.0,
+                "absolute_difference": 6.463541666666668,
+                "relative_difference": 0.31473497337053014,
+                "drift_detected": true,
+                "calculation_available": true,
+                "reason": null
+            },
+            {
+                "feature_name": "Insulin",
+                "reference_mean": 79.79947916666667,
+                "current_mean": 143.75,
+                "absolute_difference": 63.95052083333333,
+                "relative_difference": 0.8013902033090754,
+                "drift_detected": true,
+                "calculation_available": true,
+                "reason": null
+            },
+            {
+                "feature_name": "BMI",
+                "reference_mean": 31.992578124999998,
+                "current_mean": 28.85,
+                "absolute_difference": 3.1425781249999964,
+                "relative_difference": 0.09822834886020917,
+                "drift_detected": false,
+                "calculation_available": true,
+                "reason": null
+            },
+            {
+                "feature_name": "DiabetesPedigreeFunction",
+                "reference_mean": 0.47187630208333325,
+                "current_mean": 0.75,
+                "absolute_difference": 0.27812369791666675,
+                "relative_difference": 0.5893995877494822,
+                "drift_detected": true,
+                "calculation_available": true,
+                "reason": null
+            },
+            {
+                "feature_name": "Age",
+                "reference_mean": 33.240885416666664,
+                "current_mean": 34.5,
+                "absolute_difference": 1.2591145833333357,
+                "relative_difference": 0.037878491127737154,
+                "drift_detected": false,
+                "calculation_available": true,
+                "reason": null
+            }
+        ]
+    }
+}
