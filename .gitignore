@@ -46,3 +46,6 @@ mlflow.db-wal
 # Temporary pytest debug artifacts
 tmp/
 
+# Generated retraining artifacts
+artifacts/models/candidates/
+artifacts/reports/retraining/
