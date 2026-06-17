@@ -1,0 +1,57 @@
+{
+    "total_predictions": 4,
+    "prediction_distribution": {
+        "0": 2,
+        "1": 2
+    },
+    "risk_probability": {
+        "mean": 0.4445465924218297,
+        "min": 0.009763870388269424,
+        "max": 0.9236446619033813
+    },
+    "models": {
+        "xgboost": 4
+    },
+    "features": {
+        "Pregnancies": {
+            "mean": 2.5,
+            "min": 1.0,
+            "max": 5.0
+        },
+        "Glucose": {
+            "mean": 148.75,
+            "min": 95.0,
+            "max": 200.0
+        },
+        "BloodPressure": {
+            "mean": 76.25,
+            "min": 65.0,
+            "max": 85.0
+        },
+        "SkinThickness": {
+            "mean": 27.0,
+            "min": 18.0,
+            "max": 35.0
+        },
+        "Insulin": {
+            "mean": 143.75,
+            "min": 70.0,
+            "max": 260.0
+        },
+        "BMI": {
+            "mean": 28.85,
+            "min": 24.5,
+            "max": 36.2
+        },
+        "DiabetesPedigreeFunction": {
+            "mean": 0.75,
+            "min": 0.3,
+            "max": 1.1
+        },
+        "Age": {
+            "mean": 34.5,
+            "min": 25.0,
+            "max": 55.0
+        }
+    }
+}
